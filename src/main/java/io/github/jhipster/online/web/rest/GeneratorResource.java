@@ -25,6 +25,7 @@ import io.github.jhipster.online.domain.User;
 import io.github.jhipster.online.domain.enums.GitProvider;
 import io.github.jhipster.online.security.AuthoritiesConstants;
 import io.github.jhipster.online.service.*;
+import io.github.jhipster.online.util.ApplicationConfigurationValidator;
 import io.github.jhipster.online.util.SanitizeInputs;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -73,6 +74,12 @@ public class GeneratorResource {
     @Secured(AuthoritiesConstants.USER)
     public ResponseEntity<String> generateApplicationOnGit(@RequestBody String applicationConfiguration) throws Exception {
         applicationConfiguration = SanitizeInputs.sanitizeInput(applicationConfiguration);
+        try {
+            ApplicationConfigurationValidator.validate(applicationConfiguration);
+        } catch (IllegalArgumentException e) {
+            log.warn("Rejected application configuration: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         log.info("Generating application on GitHub - .yo-rc.json: {}", applicationConfiguration);
         User user = userService.getUser();
         log.debug("Reading application configuration");
@@ -112,6 +119,12 @@ public class GeneratorResource {
     @PostMapping("/download-application")
     public @ResponseBody ResponseEntity<byte[]> downloadApplication(@RequestBody String applicationConfiguration) {
         applicationConfiguration = SanitizeInputs.sanitizeInput(applicationConfiguration);
+        try {
+            ApplicationConfigurationValidator.validate(applicationConfiguration);
+        } catch (IllegalArgumentException e) {
+            log.warn("Rejected application configuration: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         log.info("Downloading application - .yo-rc.json: {}", applicationConfiguration);
         String applicationId = UUID.randomUUID().toString();
         String zippedApplication;

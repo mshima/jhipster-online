@@ -44,6 +44,10 @@ public class JHipsterService {
 
     private static final String FORCE = "--force";
 
+    // Blueprints are npm packages executed during generation. JHipster Online never generates with a
+    // blueprint, so they are disabled to prevent a submitted configuration from running arbitrary code.
+    private static final String DISABLE_BLUEPRINTS = "--disable-blueprints";
+
     private final LogsService logsService;
 
     private final Executor taskExecutor;
@@ -81,6 +85,7 @@ public class JHipsterService {
                 SKIP_INSTALL,
                 "--skip-cache",
                 "--skip-git",
+                DISABLE_BLUEPRINTS,
                 FORCE
             );
     }
@@ -96,6 +101,7 @@ public class JHipsterService {
                 FORCE_INSIGHT,
                 SKIP_CHECKS,
                 SKIP_INSTALL,
+                DISABLE_BLUEPRINTS,
                 FORCE
             );
     }
@@ -115,6 +121,7 @@ public class JHipsterService {
                 FORCE_INSIGHT,
                 SKIP_CHECKS,
                 SKIP_INSTALL,
+                DISABLE_BLUEPRINTS,
                 FORCE
             );
     }
